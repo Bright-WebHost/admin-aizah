@@ -38,7 +38,7 @@ const options: RoomOption[] = [
   { value: "6874aa82299ea6a2e780547f", label: "Chic-studio" },
 
   { value: "6874ab3b299ea6a2e78054f5", label: "Merano-1710" },
-  { value: "6874ab93299ea6a2e7805525", label: "Majestine-618" },
+  { value: "6874c925959d810df54543ab", label: "Majestine-618" },
   { value: "6874abe0299ea6a2e7805553", label: "Reva-1811" },
   { value: "6874ac26299ea6a2e7805582", label: "Merano-2906" },
 ];
