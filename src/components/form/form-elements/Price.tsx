@@ -33,7 +33,7 @@ interface ApiResponse {
 }
 
 const options: RoomOption[] = [
-  { value: "6853d4b14f532831999a179c", label: "Chic-1" },
+  { value: "68748a768ed78816e370028d", label: "Chic-1" },
   { value: "6853d4e3e6ad1fa702b7870a", label: "Dubail-mall" },
   { value: "6853d50e4419a581bb434460", label: "Chic-studio" },
 
