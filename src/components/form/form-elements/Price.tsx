@@ -34,13 +34,13 @@ interface ApiResponse {
 
 const options: RoomOption[] = [
   { value: "68748a768ed78816e370028d", label: "Chic-1" },
-  { value: "6853d4e3e6ad1fa702b7870a", label: "Dubail-mall" },
-  { value: "6853d50e4419a581bb434460", label: "Chic-studio" },
+  { value: "6874aa0e299ea6a2e7805423", label: "Dubail-mall" },
+  { value: "6874aa82299ea6a2e780547f", label: "Chic-studio" },
 
-  { value: "6842bcaf440f00f8d71ed023", label: "Merano-1710" },
-  { value: "6842bce0440f00f8d71ed025", label: "Majestine-618" },
-  { value: "6842bcff440f00f8d71ed027", label: "Reva-1811" },
-  { value: "68490c10187d6baa5db2ed55", label: "Merano-2906" },
+  { value: "6874ab3b299ea6a2e78054f5", label: "Merano-1710" },
+  { value: "6874ab93299ea6a2e7805525", label: "Majestine-618" },
+  { value: "6874abe0299ea6a2e7805553", label: "Reva-1811" },
+  { value: "6874ac26299ea6a2e7805582", label: "Merano-2906" },
 ];
 
 export default function Price() {
