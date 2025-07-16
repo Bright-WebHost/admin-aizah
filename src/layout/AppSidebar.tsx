@@ -47,13 +47,14 @@ const navItems: NavItem[] = [
     name: "Rooms",
     icon: <CalenderIcon />,
     subItems: [
-      { name: "Chic 1 BHK", path: "/calendar", pro: false },
-      { name: "Dubai mall", path: "/calendar", pro: false },
-      { name: "Chic Studio", path: "/calendar", pro: false },
+      { name: "Chic 1 BHK", path: "/Merano", pro: false },
+      { name: "Dubai mall", path: "/Merano", pro: false },
+      { name: "Chic Studio", path: "/Merano", pro: false },
       { name: "Merano 1710", path: "/Merano", pro: false },
-      { name: "Merano 168", path: "/calendar", pro: false },
-      { name: "Reva 1811", path: "/calendar", pro: false },
-      { name: "Merano 2906", path: "/calendar", pro: false },
+      { name: "Merano 168", path: "/Merano", pro: false },
+      { name: "Reva 1811", path: "/Merano", pro: false },
+      { name: "Merano 2906", path: "/Merano", pro: false },
+      // { name: "Merano 2906", path: "/calendar", pro: false },
       // { name: "Chic 1 BHK", path: "/blank", pro: false },
     ],
   },
@@ -357,7 +358,7 @@ const AppSidebar: React.FC = () => {
                 width={150}
                 height={40}
            /> */}
-           <h1 className="text-white uppercase text-2xl font-outfit">aizah hospitality</h1>
+           <h1 className="text-xl font-semibold text-gray-800 dark:text-white/90">aizah hospitality</h1>
             </>
           ) : (
             // <img
