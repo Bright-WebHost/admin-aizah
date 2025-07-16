@@ -12,6 +12,7 @@ import  axios  from 'axios';
 import { ListIcon } from "../../../icons";
 interface CheckoutData {
   id: number;
+  roomname: string;
   fname: string;
   lname: string;
   email: string;
@@ -165,6 +166,12 @@ export default function BasicTableOne() {
                 isHeader
                 className="px-5 py-3 font-medium text-gray-900 text-start text-theme-xs dark:text-gray-400"
               >
+             Room Name
+              </TableCell>
+              <TableCell
+                isHeader
+                className="px-5 py-3 font-medium text-gray-900 text-start text-theme-xs dark:text-gray-400"
+              >
                First Name
               </TableCell>
               <TableCell
@@ -246,6 +253,9 @@ export default function BasicTableOne() {
                 </TableCell> */}
                 <TableCell className="px-4 py-3 text-black text-start text-theme-sm dark:text-gray-400">
                   {item.currentDate.slice(0,10)}
+                </TableCell>
+                <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
+                  {item.roomname}
                 </TableCell>
                 <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
                   {item.fname}
