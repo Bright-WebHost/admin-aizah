@@ -32,10 +32,10 @@ const navItems: NavItem[] = [
   //   subItems: [{ name: "Ecommerce", path: "/", pro: false },],
   // },
    {
-    icon: <CalenderIcon />,
+    icon: <UserCircleIcon/>,
     name: "User Details",
       subItems: [
-        { name: "User Details", path: "/", pro: false },
+        // { name: "User Details", path: "/", pro: false },
        
         { name: "Booked User", path: "/profile", pro: false },
          { name: "Submit User", path: "/submit-data", pro: false },
@@ -47,19 +47,19 @@ const navItems: NavItem[] = [
     name: "Rooms",
     icon: <CalenderIcon />,
     subItems: [
-      { name: "Chic 1 BHK", path: "/Merano", pro: false },
-      { name: "Dubai mall", path: "/Merano", pro: false },
-      { name: "Chic Studio", path: "/Merano", pro: false },
+      // { name: "Chic 1 BHK", path: "/Merano", pro: false },
+      // { name: "Dubai mall", path: "/Merano", pro: false },
+      // { name: "Chic Studio", path: "/Merano", pro: false },
       { name: "Merano 1710", path: "/Merano", pro: false },
-      { name: "Merano 168", path: "/Merano", pro: false },
-      { name: "Reva 1811", path: "/Merano", pro: false },
-      { name: "Merano 2906", path: "/Merano", pro: false },
+      { name: "Majestine-618", path: "/Majestine", pro: false },
+      { name: "Reva 1811", path: "/Reva", pro: false },
+      { name: "Merano 2906", path: "/Merano-2906", pro: false },
       // { name: "Merano 2906", path: "/calendar", pro: false },
       // { name: "Chic 1 BHK", path: "/blank", pro: false },
     ],
   },
     {
-    icon: <CalenderIcon />,
+    icon: <BoxCubeIcon />,
     name: "Admin Controller",
       subItems: [
         { name: "razorpay", path: "/Razorpay", pro: false },
@@ -358,7 +358,7 @@ const AppSidebar: React.FC = () => {
                 width={150}
                 height={40}
            /> */}
-           <h1 className="text-xl font-semibold text-gray-800 dark:text-white/90">aizah hospitality</h1>
+           <h1 className="text-xl font-semibold text-gray-800 dark:text-white/90">Aizah Hospitality</h1>
             </>
           ) : (
             // <img

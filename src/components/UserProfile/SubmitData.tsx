@@ -25,6 +25,8 @@ interface CheckoutData {
   totalprice:string;
   price:string;
   paymentID:string;
+  roomname:string;
+  
 
 }
 export default function SubmitData() {
@@ -76,6 +78,7 @@ export default function SubmitData() {
               <h4 className="text-lg font-semibold text-gray-800 dark:text-white/90 lg:mb-6">
               {/* {item.currentDate} */}
               {new Date(item.currentDate).toLocaleString()}
+             {item.roomname}
               {/* {new Date(item.currentDate).toLocaleDateString()} */}
               </h4>
 

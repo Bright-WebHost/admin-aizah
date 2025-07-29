@@ -79,7 +79,9 @@ export default function UserInfoCard() {
               {/* {item.currentDate} */}
               {item.roomname}
               {/* {new Date(item.currentDate).toLocaleDateString()} */}
-              </h4></div>
+              </h4>
+              <h2 className="flex w-full justify-center rounded-lg bg-brand-500 px-6 py-3.5 text-sm font-medium text-white hover:bg-brand-600 sm:w-auto mb-5">{item.paymentID ? "Online" : "Admin book"}</h2>
+              </div>
           
            
 
@@ -206,7 +208,7 @@ export default function UserInfoCard() {
                     Payment Id
                   </p>
                   <p className="text-xs font-medium text-gray-500 dark:text-gray-400">
-                   {item.paymentID}
+                   {item.paymentID }
                   </p>
                 </div>
                 {/* Payment Status */}
@@ -215,7 +217,7 @@ export default function UserInfoCard() {
                     Payment Status
                   </p>
                   <p className="text-xs font-medium text-gray-500 dark:text-gray-400">
-                    Pay/Success
+                    {item.paymentID? ' Pay/Success' :" " }
                   </p>
                 </div>
               </div>

@@ -23,6 +23,9 @@ import Razorpay from "./pages/Forms/Razorpay";
 import SubmitData from "./components/UserProfile/SubmitData";
 import Price from "./components/form/form-elements/Price";
 import Merano from "./pages/UserDetails/Merano";
+import Reva from "./pages/UserDetails/Reva";
+import Majestine from "./pages/UserDetails/Majestine";
+import Merano2 from "./pages/UserDetails/Merano2";
 
 export default function App() {
   return (
@@ -33,7 +36,7 @@ export default function App() {
           {/* Dashboard Layout */}
           <Route element={<AppLayout />}>
             {/* <Route index path="/" element={<Home />} /> */}
-            <Route index path="/" element={<UserDetails />} />
+            {/* <Route index path="/" element={<UserDetails />} /> */}
             <Route index path="/submit-data" element={<SubmitData />} />
             <Route index path="/Razorpay" element={<Razorpay />} />
             <Route index path="/Price" element={<Price />} />
@@ -42,6 +45,9 @@ export default function App() {
             <Route path="/profile" element={<UserProfiles />} />
             <Route path="/calendar" element={<Calendar />} />
             <Route path="/Merano" element={<Merano />} />
+            <Route path="/Reva" element={<Reva />} />
+            <Route path="/Majestine" element={<Majestine />} />
+            <Route path="/Merano-2906" element={<Merano2 />} />
             <Route path="/blank" element={<Blank />} />
 
             {/* Forms */}
@@ -64,7 +70,7 @@ export default function App() {
           </Route>
 
           {/* Auth Layout */}
-          <Route path="/signin" element={<SignIn />} />
+          <Route path="/" element={<SignIn />} />
           <Route path="/signup" element={<SignUp />} />
 
           {/* Fallback Route */}

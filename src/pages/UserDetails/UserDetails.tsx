@@ -7,8 +7,8 @@ export default function UserDetails() {
   return (
     <>
       <PageMeta
-        title="aizah hospitality"
-        description="aizah hospitality"
+        title="Aizah Hospitality"
+        description="Aizah Hospitality"
       />
       <PageBreadcrumb pageTitle="User Details" />
       <div className="space-y-6">

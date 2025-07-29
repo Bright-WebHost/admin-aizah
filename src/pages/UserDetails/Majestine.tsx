@@ -37,9 +37,9 @@ type SavedEvent = {
 };
 
 const apiBase = import.meta.env.VITE_API_URL;
-const ROOM_NAME = "merano";
+const ROOM_NAME = "Majestine";
 
-const Merano: React.FC = () => {
+const Majestine: React.FC = () => {
   const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | null>(null);
   const [eventTitle, setEventTitle] = useState("Booking");
   const [eventStartDate, setEventStartDate] = useState("");
@@ -383,11 +383,11 @@ const Merano: React.FC = () => {
 
   return (
     <>
-      <PageMeta title="Merano Booking Calendar" description="Merano room booking management" />
+      <PageMeta title=" Booking Calendar" description=" room booking management" />
       
       <div className="rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]">
         <div className="flex justify-between items-center p-4 border-b">
-          <h2 className="text-xl font-semibold dark:text-white">Merano </h2>
+          <h2 className="text-xl font-semibold dark:text-white">Majestine</h2>
           {/* <button
             onClick={togglePostbookFilter}
             className={`px-4 py-2 rounded-lg ${showOnlyPostbook ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
@@ -622,4 +622,4 @@ const renderEventContent = (eventInfo: any) => {
   );
 };
 
-export default Merano;
+export default Majestine;

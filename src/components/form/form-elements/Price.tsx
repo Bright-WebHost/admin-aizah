@@ -1,30 +1,44 @@
 'use client';
 
-import { useState } from "react";
-import ComponentCard from "../../common/ComponentCard";
-import Label from "../Label";
-import Input from "../input/InputField";
-import axios, { AxiosError } from "axios";
-import Button from "../../ui/button/Button";
+import { useState } from 'react';
+import axios from 'axios';
+import ComponentCard from '../../common/ComponentCard';
+import Label from '../Label';
+import Input from '../input/InputField';
+import Button from '../../ui/button/Button';
+
+type ButtonVariant = 'primary' | 'outline' | 'secondary';
 
 interface RoomOption {
   value: string;
   label: string;
 }
 
+interface DateRange {
+  startDate: string;
+  endDate: string;
+  price: number;
+}
+
+interface MonthData {
+  ranges: DateRange[];
+  basePrice: number;
+}
+
 interface PriceData {
-  jan?: number;
-  feb?: number;
-  mar?: number;
-  apr?: number;
-  may?: number;
-  jun?: number;
-  jul?: number;
-  aug?: number;
-  sep?: number;
-  oct?: number;
-  nov?: number;
-  dec?: number;
+  jan?: MonthData;
+  feb?: MonthData;
+  mar?: MonthData;
+  apr?: MonthData;
+  may?: MonthData;
+  jun?: MonthData;
+  jul?: MonthData;
+  aug?: MonthData;
+  sep?: MonthData;
+  oct?: MonthData;
+  nov?: MonthData;
+  dec?: MonthData;
+  [key: string]: MonthData | undefined;
 }
 
 interface ApiResponse {
@@ -33,195 +47,586 @@ interface ApiResponse {
 }
 
 const options: RoomOption[] = [
-  { value: "68748a768ed78816e370028d", label: "Chic-1" },
-  { value: "6874aa0e299ea6a2e7805423", label: "Dubail-mall" },
-  { value: "6874aa82299ea6a2e780547f", label: "Chic-studio" },
-
-  { value: "6874ab3b299ea6a2e78054f5", label: "Merano-1710" },
-  { value: "6874c925959d810df54543ab", label: "Majestine-618" },
-  { value: "6874abe0299ea6a2e7805553", label: "Reva-1811" },
-  { value: "6874ac26299ea6a2e7805582", label: "Merano-2906" },
+  // { value: '687dd634fcd5e0829434c9a0', label: 'Chic-1' },
+  // { value: '687dd643fcd5e0829434c9a2', label: 'Dubail-mall' },
+  // { value: '687dd653fcd5e0829434c9a4', label: 'Chic-studio' },
+  { value: '687dd603fcd5e0829434c99b', label: 'Merano-1710' },
+  { value: '687dd666fcd5e0829434c9a6', label: 'Majestine-618' },
+  { value: '68874d3eae04001a449d1efb', label: 'Reva-1811' },
+  { value: '68874e21ae04001a449d20d5', label: 'Merano-2906' },
 ];
 
+const monthNames = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'] as const;
+type MonthKey = typeof monthNames[number];
+
+const monthLabels = [
+  'January', 'February', 'March', 'April', 'May', 'June',
+  'July', 'August', 'September', 'October', 'November', 'December'
+];
+
+const CalendarDatePicker = ({ 
+  month, 
+  year, 
+  selectedRanges, 
+  onRangeSelect, 
+  onClose 
+}: {
+  month: number;
+  year: number;
+  selectedRanges: DateRange[];
+  onRangeSelect: (startDate: string, endDate: string) => void;
+  onClose: () => void;
+}) => {
+  const [selectionPhase, setSelectionPhase] = useState<'start' | 'end'>('start');
+  const [startDate, setStartDate] = useState<string | null>(null);
+  const [endDate, setEndDate] = useState<string | null>(null);
+  const [hoverDate, setHoverDate] = useState<string | null>(null);
+
+  const getDaysInMonth = (month: number, year: number) => {
+    return new Date(year, month + 1, 0).getDate();
+  };
+
+  const getFirstDayOfMonth = (month: number, year: number) => {
+    return new Date(year, month, 1).getDay();
+  };
+
+  const formatDateString = (day: number) => {
+    const date = new Date(year, month, day);
+    return date.toISOString().split('T')[0];
+  };
+
+  const isDateInRange = (day: number) => {
+    const dateStr = formatDateString(day);
+    return selectedRanges.some(range => {
+      return dateStr >= range.startDate && dateStr <= range.endDate;
+    });
+  };
+
+  const isDateInSelection = (day: number) => {
+    const dateStr = formatDateString(day);
+    
+    if (!startDate) return false;
+    if (!endDate && !hoverDate) return dateStr === startDate;
+    
+    const effectiveEndDate = endDate || hoverDate;
+    if (!effectiveEndDate) return false;
+    
+    const start = startDate <= effectiveEndDate ? startDate : effectiveEndDate;
+    const end = startDate <= effectiveEndDate ? effectiveEndDate : startDate;
+    
+    return dateStr >= start && dateStr <= end;
+  };
+
+  const handleDateClick = (day: number) => {
+    const dateStr = formatDateString(day);
+    
+    if (selectionPhase === 'start') {
+      setStartDate(dateStr);
+      setEndDate(null);
+      setSelectionPhase('end');
+    } else {
+      setEndDate(dateStr);
+      setSelectionPhase('start');
+    }
+  };
+
+  const handleMouseEnter = (day: number) => {
+    if (selectionPhase === 'end') {
+      const dateStr = formatDateString(day);
+      setHoverDate(dateStr);
+    }
+  };
+
+  const handleMouseLeave = () => {
+    setHoverDate(null);
+  };
+
+  const confirmSelection = () => {
+    if (startDate && endDate) {
+      onRangeSelect(startDate, endDate);
+    } else if (startDate && hoverDate) {
+      onRangeSelect(startDate, hoverDate);
+    }
+    onClose();
+  };
+
+  const daysInMonth = getDaysInMonth(month, year);
+  const firstDay = getFirstDayOfMonth(month, year);
+  const days = [];
+
+  // Add empty cells for days before the first day of the month
+  for (let i = 0; i < firstDay; i++) {
+    days.push(<div key={`empty-${i}`} className="calendar-day empty"></div>);
+  }
+
+  // Add days of the month
+  for (let day = 1; day <= daysInMonth; day++) {
+    const isSelected = isDateInRange(day);
+    const isInSelection = isDateInSelection(day);
+    
+    days.push(
+      <div
+        key={day}
+        className={`calendar-day ${isSelected ? 'selected' : ''} ${isInSelection ? 'selection' : ''}`}
+        onClick={() => handleDateClick(day)}
+        onMouseEnter={() => handleMouseEnter(day)}
+      >
+        {day}
+      </div>
+    );
+  }
+
+  return (
+    <div 
+      className="calendar-popup fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-1 mt-20"
+      onMouseLeave={handleMouseLeave}
+    >
+      <div className="bg-gray-900 rounded-lg p-6 max-w-md w-full mx-4 border border-gray-700">
+        <div className="flex justify-between items-center mb-4">
+          <h3 className="text-lg font-semibold text-white">
+            {monthLabels[month]} {year}
+          </h3>
+          <button
+            onClick={onClose}
+            className="text-gray-300 hover:text-white text-xl font-bold"
+          >
+            ×
+          </button>
+        </div>
+        
+        <div className="calendar-grid grid grid-cols-7 gap-1 mb-4">
+          {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
+            <div key={day} className="calendar-header text-center text-sm font-medium p-2 text-gray-300">
+              {day}
+            </div>
+          ))}
+          {days}
+        </div>
+
+        <div className="flex flex-col items-center">
+          <div className="text-sm text-gray-400 mb-4">
+            <p>Click to select start date, then click end date</p>
+          </div>
+          <Button
+            size="sm"
+            variant="primary"
+            onClick={confirmSelection}
+            disabled={!startDate || (!endDate && !hoverDate)}
+            className="w-full max-w-xs"
+          >
+            Confirm
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const PriceRangeManager = ({ 
+  ranges, 
+  basePrice, 
+  onRangesChange, 
+  onBasePriceChange,
+  roomName,
+  month
+}: {
+  ranges: DateRange[];
+  basePrice: number;
+  onRangesChange: (ranges: DateRange[]) => void;
+  onBasePriceChange: (price: number) => void;
+  roomName: string;
+  month: MonthKey;
+}) => {
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [error, setError] = useState('');
+
+  const handlePriceChange = (index: number, price: number) => {
+    const newRanges = [...ranges];
+    newRanges[index].price = price;
+    onRangesChange(newRanges);
+  };
+
+  const handleRemoveRange = async (index: number) => {
+    const rangeToDelete = ranges[index];
+    if (!roomName || !rangeToDelete) return;
+
+    setIsDeleting(true);
+    setError('');
+
+    try {
+      const response = await axios.delete('http://localhost:7000/api/priceDelete', {
+        data: {
+          roomName,
+          month,
+          startDate: rangeToDelete.startDate,
+          endDate: rangeToDelete.endDate
+        }
+      });
+
+      if (response.data.message === 'Range deleted successfully') {
+        const newRanges = ranges.filter((_, i) => i !== index);
+        onRangesChange(newRanges);
+      } else {
+        setError('Failed to delete range on server');
+      }
+    } catch (err) {
+      console.error('Delete error:', err);
+      setError('Failed to delete range. Please try again.');
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
+  return (
+    <div className="space-y-3">
+      {error && (
+        <div className="text-red-500 text-sm p-2 bg-red-50 dark:bg-red-900/20 rounded">
+          {error}
+        </div>
+      )}
+      
+      <div>
+        <Label>Base Price (AED)</Label>
+        <Input
+          type="number"
+          value={basePrice || ''}
+          onChange={(e) => onBasePriceChange(Number(e.target.value) || 0)}
+          placeholder="Enter base price"
+          className='dark:text-white dark:border-white'
+        />
+      </div>
+      
+      {ranges.length > 0 && (
+        <div className='dark:text-white '>
+          <Label>Date Range Pricing</Label>
+          <div className="space-y-2 max-h-40 overflow-y-auto">
+            {ranges.map((range, index) => (
+              <div key={index} className="flex items-center gap-2 p-2 bg-gray-50 dark:bg-gray-700 rounded">
+                <span className="text-sm flex-1">
+                  {range.startDate} to {range.endDate}
+                </span>
+                <Input
+                  type="number"
+                  value={range.price || ''}
+                  onChange={(e) => handlePriceChange(index, Number(e.target.value) || 0)}
+                  placeholder="Price"
+                  className="w-20"
+                />
+                <button
+                  onClick={() => handleRemoveRange(index)}
+                  disabled={isDeleting}
+                  className="text-red-500 hover:text-red-700 font-bold disabled:opacity-50"
+                >
+                  {isDeleting ? '...' : '×'}
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
 export default function Price() {
-  const apiBase = import.meta.env.VITE_API_URL;
-  const [roomId, setRoomId] = useState<string>("");
-  const [roomName, setRoomName] = useState<string>("");
-  const [prices, setPrices] = useState<Record<string, string>>({
-    jan: "", feb: "", mar: "", apr: "",
-    may: "", jun: "", jul: "", aug: "",
-    sep: "", oct: "", nov: "", dec: "",
+  const [roomId, setRoomId] = useState('');
+  const [roomName, setRoomName] = useState('');
+  const [prices, setPrices] = useState<Record<MonthKey, MonthData>>({
+    jan: { ranges: [], basePrice: 0 },
+    feb: { ranges: [], basePrice: 0 },
+    mar: { ranges: [], basePrice: 0 },
+    apr: { ranges: [], basePrice: 0 },
+    may: { ranges: [], basePrice: 0 },
+    jun: { ranges: [], basePrice: 0 },
+    jul: { ranges: [], basePrice: 0 },
+    aug: { ranges: [], basePrice: 0 },
+    sep: { ranges: [], basePrice: 0 },
+    oct: { ranges: [], basePrice: 0 },
+    nov: { ranges: [], basePrice: 0 },
+    dec: { ranges: [], basePrice: 0 },
   });
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string>("");
+
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [activeCalendar, setActiveCalendar] = useState<MonthKey | null>(null);
+  const currentYear = new Date().getFullYear();
 
   const handleSelectChange = async (event: React.ChangeEvent<HTMLSelectElement>) => {
     const id = event.target.value;
     if (!id) return;
 
     setRoomId(id);
-    setError("");
+    setError('');
     setIsLoading(true);
 
-    const selectedRoom = options.find(opt => opt.value === id);
-    setRoomName(selectedRoom ? selectedRoom.label : "");
+    const selected = options.find((o) => o.value === id);
+    setRoomName(selected ? selected.label : '');
 
     try {
-      const res = await axios.get<ApiResponse>(`${apiBase}api/priceView/${id}`);
+      const res = await axios.get<ApiResponse>(`http://localhost:7000/api/priceView/${id}`);
       const fetched = res.data;
 
       if (fetched?.prices) {
-        const newPrices: Record<string, string> = {
-          jan: "", feb: "", mar: "", apr: "",
-          may: "", jun: "", jul: "", aug: "",
-          sep: "", oct: "", nov: "", dec: "",
-        };
-
-        Object.entries(fetched.prices).forEach(([month, value]) => {
-          const monthKey = month.toLowerCase();
-          if (monthKey in newPrices && value !== null && value !== undefined) {
-            newPrices[monthKey] = value.toString();
+        const newPrices = { ...prices };
+        
+        monthNames.forEach(month => {
+          const monthData = fetched.prices?.[month];
+          if (monthData) {
+            newPrices[month] = {
+              ranges: monthData.ranges || [],
+              basePrice: monthData.basePrice || 0
+            };
           }
         });
 
         setPrices(newPrices);
-      } else {
-        console.log("No price data found.");
       }
     } catch (err: unknown) {
-      let errorMessage = "Failed to load prices.";
-      if (axios.isAxiosError(err)) {
-        errorMessage = err.response?.data?.message || err.message;
-      } else if (err instanceof Error) {
-        errorMessage = err.message;
-      }
-      setError(errorMessage);
+      const msg = axios.isAxiosError(err)
+        ? err.response?.data?.message || err.message
+        : err instanceof Error
+        ? err.message
+        : 'Failed to load prices.';
+      setError(msg);
     } finally {
       setIsLoading(false);
     }
   };
 
-  const handleInputChange = (month: string, value: string) => {
-    if (value === "" || /^\d*$/.test(value)) {
-      setPrices(prev => ({ ...prev, [month]: value }));
-    }
+  const handleOpenCalendar = (month: MonthKey) => {
+    setActiveCalendar(month);
+  };
+
+  const handleCloseCalendar = () => {
+    setActiveCalendar(null);
+  };
+
+  const handleRangeSelect = (month: MonthKey, startDate: string, endDate: string) => {
+    setPrices(prev => ({
+      ...prev,
+      [month]: {
+        ...prev[month],
+        ranges: [...prev[month].ranges, { startDate, endDate, price: prev[month].basePrice }]
+      }
+    }));
+  };
+
+  const handleRangesChange = (month: MonthKey, ranges: DateRange[]) => {
+    setPrices(prev => ({
+      ...prev,
+      [month]: { ...prev[month], ranges }
+    }));
+  };
+
+  const handleBasePriceChange = (month: MonthKey, price: number) => {
+    setPrices(prev => ({
+      ...prev,
+      [month]: { ...prev[month], basePrice: price }
+    }));
   };
 
   const handleSubmit = async () => {
     if (!roomId) {
-      setError("Please select a room before updating prices.");
+      setError('Please select a room before updating prices.');
       return;
     }
 
     setIsLoading(true);
-    setError("");
+    setError('');
 
     try {
-      const priceData: PriceData = Object.fromEntries(
-        Object.entries(prices).map(([month, value]) => [
-          month,
-          value === "" ? 0 : parseInt(value)
-        ])
-      );
+      await axios.put(`http://localhost:7000/api/priceUpadte`, {
+        roomName,
+        prices,
+      });
 
-     await axios.put(`${apiBase}api/priceUpadte`, {
-  roomName,
-  prices: priceData
-});
-
-      alert("Prices updated successfully!");
+      alert('Prices updated successfully!');
     } catch (err: unknown) {
-      let errorMessage = "Failed to update prices. Please try again.";
-      if (axios.isAxiosError(err)) {
-        errorMessage = err.response?.data?.message || err.message;
-      } else if (err instanceof Error) {
-        errorMessage = err.message;
-      }
-      setError(errorMessage);
+      const msg = axios.isAxiosError(err)
+        ? err.response?.data?.message || err.message
+        : err instanceof Error
+        ? err.message
+        : 'Failed to update prices.';
+      setError(msg);
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <ComponentCard title="Monthly Room Prices">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* Form Section */}
-        <div className="space-y-4">
-          <Label htmlFor="room-select">Select Room</Label>
-          <select
-            id="room-select"
-            value={roomId}
-            onChange={handleSelectChange}
-            disabled={isLoading}
-            className="w-full p-2 rounded border bg-white text-black focus:text-black dark:bg-gray-800 dark:text-white dark:focus:text-white"
-          >
-            <option value="">-- Select a room --</option>
-            {options.map(opt => (
-              <option key={opt.value} value={opt.value}>
-                {opt.label}
-              </option>
-            ))}
-          </select>
+    <>
+      <ComponentCard title="Monthly Room Pricing with Date Ranges">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="space-y-4">
+            <Label htmlFor="room-select">Select Room</Label>
+            <select
+              id="room-select"
+              value={roomId}
+              onChange={handleSelectChange}
+              disabled={isLoading}
+              className="w-full p-2 rounded border bg-white text-black focus:text-black dark:bg-gray-800 dark:text-white dark:focus:text-white"
+            >
+              <option value="">-- Select a room --</option>
+              {options.map((opt) => (
+                <option key={opt.value} value={opt.value}>
+                  {opt.label}
+                </option>
+              ))}
+            </select>
 
-          {error && (
-            <div className="text-red-500 text-sm p-2 bg-red-50 rounded">
-              {error}
-            </div>
-          )}
-
-          {isLoading && (
-            <div className="text-blue-500">Loading prices...</div>
-          )}
-
-          <div className="grid grid-cols-2 gap-4 mt-4">
-            {Object.keys(prices).map(month => (
-              <div key={month}>
-                <Label htmlFor={month}>
-                  {month.charAt(0).toUpperCase() + month.slice(1)}
-                </Label>
-                <Input
-                  type="text"
-                  id={month}
-                  value={prices[month]}
-                  onChange={e => handleInputChange(month, e.target.value)}
-                  disabled={!roomId || isLoading}
-                />
+            {error && (
+              <div className="text-red-500 text-sm p-2 bg-red-50 dark:bg-red-900/20 rounded">
+                {error}
               </div>
-            ))}
+            )}
+
+            {isLoading && <div className="text-blue-500">Loading prices...</div>}
+
+            <div className="grid grid-cols-1 gap-4 mt-4 max-h-96 overflow-y-auto">
+              {monthNames.map((month, index) => (
+                <div key={month} className="border border-gray-200 rounded-lg p-4 dark:text-white dark:border-white">
+                  <div className="flex items-center justify-between mb-3">
+                    <h4 className="font-medium text-lg">{monthLabels[index]}</h4>
+                    <Button
+                      size="sm"
+                      variant="secondary"
+                      onClick={() => handleOpenCalendar(month)}
+                      disabled={!roomId || isLoading}
+                      className='dark:text-white '
+                    >
+                      📅 Select Dates
+                    </Button>
+                  </div>
+                  
+                  <PriceRangeManager
+                    ranges={prices[month].ranges}
+                    basePrice={prices[month].basePrice}
+                    onRangesChange={(ranges) => handleRangesChange(month, ranges)}
+                    onBasePriceChange={(price) => handleBasePriceChange(month, price)}
+                    roomName={roomName}
+                    month={month}
+                  />
+                </div>
+              ))}
+            </div>
+
+            <Button
+              size="md"
+              variant="primary"
+              onClick={handleSubmit}
+              disabled={!roomId || isLoading}
+              className="w-full"
+            >
+              {isLoading ? 'Updating…' : 'Update All Prices'}
+            </Button>
           </div>
 
-          <Button
-            size="md"
-            variant="primary"
-            onClick={handleSubmit}
-            disabled={!roomId || isLoading}
-          >
-            {isLoading ? "Updating..." : "Update Prices"}
-          </Button>
-        </div>
+          <div className="bg-gray-100 dark:bg-gray-700 p-4 rounded-lg shadow-sm">
+            <h3 className="text-lg font-semibold mb-4 dark:text-white ">Live Preview</h3>
+            <p className="mb-4 dark:text-white ">
+              <strong className='dark:text-white '>Room Name:</strong> {roomName || 'Not selected'}
+            </p>
 
-        {/* Live Preview Section */}
-        <div className="bg-gray-100 dark:bg-dark-700 p-4 rounded-lg shadow-sm">
-          <h3 className="text-lg font-semibold mb-4">Live Preview</h3>
-          <p className="mb-2">
-            <strong>Room Name:</strong> {roomName || "Not selected"}
-          </p>
+            {roomId && (
+              <div className="space-y-3 max-h-120 overflow-y-auto">
+                {monthNames.map((month, index) => {
+                  const monthData = prices[month];
+                  const hasData = monthData.basePrice > 0 || monthData.ranges.length > 0;
+                  
+                  if (!hasData) return null;
 
-          {roomName && (
-            <ul className="mt-2 space-y-1">
-              {Object.entries(prices).map(([month, value]) => (
-                <li key={month} className="flex justify-between">
-                  <span className="capitalize">{month}:</span>
-                  <span className="font-medium">
-                    {value ? `${value}` : <span className="text-gray-400">Not set</span>}
-                  </span>
-                </li>
-              ))}
-            </ul>
-          )}
+                  return (
+                    <div key={month} className="bg-white dark:bg-gray-800 p-3 rounded border">
+                      <h4 className="font-medium text-sm text-gray-700 dark:text-gray-300 mb-2">
+                        {monthLabels[index]}
+                      </h4>
+                      
+                      {monthData.basePrice > 0 && (
+                        <p className="text-sm dark:text-white ">
+                          <strong>Base Price:</strong> {monthData.basePrice} AED
+                        </p>
+                      )}
+                      
+                      {monthData.ranges.length > 0 && (
+                        <div className="mt-2">
+                          <p className="text-xs text-gray-600 dark:text-gray-400 mb-1">
+                            Special Pricing:
+                          </p>
+                          {monthData.ranges.map((range, idx) => (
+                            <div key={idx} className="text-xs bg-gray-50 dark:bg-gray-700 p-1 rounded mb-1 dark:text-white ">
+                              {range.startDate} to {range.endDate}: <strong>{range.price} AED</strong>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
         </div>
-      </div>
-    </ComponentCard>
+      </ComponentCard>
+
+      {activeCalendar && (
+        <CalendarDatePicker
+          month={monthNames.indexOf(activeCalendar)}
+          year={currentYear}
+          selectedRanges={prices[activeCalendar].ranges}
+          onRangeSelect={(start, end) => handleRangeSelect(activeCalendar, start, end)}
+          onClose={handleCloseCalendar}
+        />
+      )}
+
+      <style jsx global>{`
+        .calendar-popup {
+          background-color: rgba(0, 0, 0, 0.8) !important;
+        }
+        
+        .calendar-day {
+          width: 2.5rem;
+          height: 2.5rem;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 0.875rem;
+          border: 1px solid rgba(255, 255, 255, 0.2);
+          cursor: pointer;
+          user-select: none;
+          color: white;
+          transition: all 0.2s ease;
+          
+        }
+        
+        .calendar-day:hover {
+          background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .calendar-day.empty {
+          border-color: transparent;
+          cursor: default;
+          background-color: transparent !important;
+        }
+        
+        .calendar-day.selected {
+          background-color: #3b82f6 !important;
+          color: white;
+          border-color: #3b82f6 !important;
+        }
+        
+        .calendar-day.selection {
+          background-color: rgba(59, 130, 246, 0.5) !important;
+          border-color: rgba(59, 130, 246, 0.7) !important;
+        }
+        
+        .calendar-header {
+          text-align: center;
+          font-size: 0.875rem;
+          font-weight: 500;
+          padding: 0.5rem;
+          color: rgba(255, 255, 255, 0.8);
+        }
+      `}</style>
+    </>
   );
 }
