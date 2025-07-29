@@ -452,6 +452,11 @@ export default function Price() {
       setIsLoading(false);
     }
   };
+const variantClasses = {
+    primary: "bg-blue-500 text-white hover:bg-blue-600",
+  outline: "border border-gray-400 text-black hover:bg-gray-100",
+  secondary: "bg-gray-600 text-white hover:bg-gray-700",
+};
 
   return (
     <>
@@ -489,7 +494,7 @@ export default function Price() {
                     <h4 className="font-medium text-lg">{monthLabels[index]}</h4>
                     <Button
                       size="sm"
-                      variant="secondary"
+                      variant="primary"
                       onClick={() => handleOpenCalendar(month)}
                       disabled={!roomId || isLoading}
                       className='dark:text-white '
