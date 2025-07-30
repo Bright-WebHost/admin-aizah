@@ -43,7 +43,7 @@ export default function UserInfoCard() {
   useEffect(()=>{
     const fetchData = async()=>{
       try{
-        const response =await axios.get(`${apiBase}api/chekoutview`);
+        const response =await axios.get(`${apiBase}/api/chekoutview`);
         setCheckoutData(response.data.data);
         console.log(response.data);
         

@@ -44,7 +44,7 @@ export default function SubmitData() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`${apiBase}api/chekoutSubmitview`);
+        const response = await axios.get(`${apiBase}/api/chekoutSubmitview`);
         setCheckoutData(response.data.data);
         console.log("Fetched:", response.data.data);
       } catch (error) {

@@ -63,7 +63,7 @@ const Reva: React.FC = () => {
 
   const fetchBookedDates = useCallback(async () => {
     try {
-      const response = await fetch(`${apiBase}api/chekoutview`);
+      const response = await fetch(`${apiBase}/api/chekoutview`);
       if (!response.ok) {
         throw new Error('Failed to fetch booked dates');
       }
@@ -123,7 +123,7 @@ const Reva: React.FC = () => {
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const response = await fetch(`${apiBase}api/views`);
+        const response = await fetch(`${apiBase}/api/views`);
         if (!response.ok) throw new Error("Failed to fetch events");
 
         const data = await response.json();
@@ -220,7 +220,7 @@ const Reva: React.FC = () => {
       let savedEvent: SavedEvent;
 
       if (selectedEvent) {
-        response = await fetch(`${apiBase}api/update/${selectedEvent.id}`, {
+        response = await fetch(`${apiBase}/api/update/${selectedEvent.id}`, {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -253,7 +253,7 @@ const Reva: React.FC = () => {
           )
         );
       } else {
-        response = await fetch(`${apiBase}api/checkout`, {
+        response = await fetch(`${apiBase}/api/checkout`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload),
@@ -309,7 +309,7 @@ const Reva: React.FC = () => {
     if (!bookingToDelete) return;
     
     try {
-      const response = await fetch(`${apiBase}api/checkoutdelete/${bookingToDelete}`, {
+      const response = await fetch(`${apiBase}/api/checkoutdelete/${bookingToDelete}`, {
         method: 'DELETE'
       });
 
@@ -317,7 +317,7 @@ const Reva: React.FC = () => {
 
       // Refresh the events and bookings
       fetchBookedDates();
-      const eventsResponse = await fetch(`${apiBase}api/views`);
+      const eventsResponse = await fetch(`${apiBase}/api/views`);
       if (!eventsResponse.ok) throw new Error("Failed to fetch events");
       
       const data = await eventsResponse.json();

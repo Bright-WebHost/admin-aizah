@@ -37,7 +37,7 @@ const apiBase = import.meta.env.VITE_API_URL;
       if (keyId) {
         // Update
         const response = await axios.put(
-          `${apiBase}keyupdate/${keyId}`,
+          `${apiBase}/api/keyupdate/${keyId}`,
           { key: apiKey }
         );
         console.log("Updated:", response.data);
