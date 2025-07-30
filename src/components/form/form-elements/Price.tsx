@@ -50,10 +50,10 @@ const options: RoomOption[] = [
   // { value: '687dd634fcd5e0829434c9a0', label: 'Chic-1' },
   // { value: '687dd643fcd5e0829434c9a2', label: 'Dubail-mall' },
   // { value: '687dd653fcd5e0829434c9a4', label: 'Chic-studio' },
-  { value: '6889c040d635154295de94f8', label: 'Merano-1710' },
-  { value: '6889df06efe926e97538bf4b', label: 'Majestine-618' },
-  { value: '6889df1cefe926e97538bffa', label: 'Reva-1811' },
-  { value: '6889df30efe926e97538c0a9', label: 'Merano-2906' },
+  { value: '688a06cd56c748a9ea56a697', label: 'Merano-1710' },
+  { value: '688a06b056c748a9ea56a65a', label: 'Majestine-618' },
+  { value: '688a068256c748a9ea56a60c', label: 'Reva-1811' },
+  { value: '688a057256c748a9ea56a4f8', label: 'Merano-2906' },
 ];
 
 const monthNames = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'] as const;
