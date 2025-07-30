@@ -45,12 +45,12 @@ interface ApiResponse {
   prices?: PriceData;
   message?: string;
 }
-
+const apiBase = import.meta.env.VITE_API_URL;
 const options: RoomOption[] = [
   // { value: '687dd634fcd5e0829434c9a0', label: 'Chic-1' },
   // { value: '687dd643fcd5e0829434c9a2', label: 'Dubail-mall' },
   // { value: '687dd653fcd5e0829434c9a4', label: 'Chic-studio' },
-  { value: '687dd603fcd5e0829434c99b', label: 'Merano-1710' },
+  { value: '6889c040d635154295de94f8', label: 'Merano-1710' },
   { value: '687dd666fcd5e0829434c9a6', label: 'Majestine-618' },
   { value: '68874d3eae04001a449d1efb', label: 'Reva-1811' },
   { value: '68874e21ae04001a449d20d5', label: 'Merano-2906' },
@@ -254,7 +254,7 @@ const PriceRangeManager = ({
     setError('');
 
     try {
-      const response = await axios.delete('http://localhost:7000/api/priceDelete', {
+      const response = await axios.delete(`${apiBase}/api/priceDelete`, {
         data: {
           roomName,
           month,
@@ -363,7 +363,7 @@ export default function Price() {
     setRoomName(selected ? selected.label : '');
 
     try {
-      const res = await axios.get<ApiResponse>(`http://localhost:7000/api/priceView/${id}`);
+      const res = await axios.get<ApiResponse>(`${apiBase}/api/priceView/${id}`);
       const fetched = res.data;
 
       if (fetched?.prices) {
@@ -435,7 +435,7 @@ export default function Price() {
     setError('');
 
     try {
-      await axios.put(`http://localhost:7000/api/priceUpadte`, {
+      await axios.put(`${apiBase}/api/priceUpadte`, {
         roomName,
         prices,
       });

@@ -17,7 +17,7 @@ const apiBase = import.meta.env.VITE_API_URL;
   useEffect(() => {
     const fetchApiKey = async () => {
       try {
-        const response = await axios.get(`${apiBase}api/keyview`);
+        const response = await axios.get(`${apiBase}/api/keyview`);
         const keyData = response.data?.data?.[0];
         if (keyData) {
           setApiKey(keyData.key);
