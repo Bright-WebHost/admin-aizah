@@ -416,6 +416,8 @@ const Merano: React.FC = () => {
                 })
               : events}
             selectable={true}
+            selectMirror={true} 
+            selectLongPressDelay={100} 
             select={handleDateSelect}
             eventClick={handleEventClick}
             dateClick={handleDateClick}
