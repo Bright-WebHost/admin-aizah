@@ -21,7 +21,7 @@ export default function AuthLayout({
                 <img
                   width={231}
                   height={48}
-                  src="public/images/Aizahlogo.png"
+                  src="./images/Aizahlogo.png"
                   alt="Logo"
                  
                 />

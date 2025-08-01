@@ -418,6 +418,7 @@ const Reva: React.FC = () => {
             selectable={true}
             selectMirror={true} 
             selectLongPressDelay={100} 
+             selectMinDistance={5}
             select={handleDateSelect}
             eventClick={handleEventClick}
             dateClick={handleDateClick}
