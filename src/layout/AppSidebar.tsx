@@ -62,7 +62,7 @@ const navItems: NavItem[] = [
     icon: <BoxCubeIcon />,
     name: "Admin Controller",
       subItems: [
-        { name: "razorpay", path: "/Razorpay", pro: false },
+        // { name: "razorpay", path: "/Razorpay", pro: false },
         { name: "Prize", path: "/Price", pro: false },
 
       ],
