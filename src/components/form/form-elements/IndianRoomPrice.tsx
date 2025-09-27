@@ -285,7 +285,7 @@ const PriceRangeManager = ({
       )}
       
       <div>
-        <Label>Base Price (AED)</Label>
+        <Label>Base Price (₹)</Label>
         <Input
           type="number"
           value={basePrice || ''}
@@ -547,7 +547,7 @@ const variantClasses = {
                       
                       {monthData.basePrice > 0 && (
                         <p className="text-sm dark:text-white ">
-                          <strong>Base Price:</strong> {monthData.basePrice} AED
+                          <strong>Base Price:</strong>₹ {monthData.basePrice} 
                         </p>
                       )}
                       
@@ -558,7 +558,7 @@ const variantClasses = {
                           </p>
                           {monthData.ranges.map((range, idx) => (
                             <div key={idx} className="text-xs bg-gray-50 dark:bg-gray-700 p-1 rounded mb-1 dark:text-white ">
-                              {range.startDate} to {range.endDate}: <strong>{range.price} AED</strong>
+                              {range.startDate} to {range.endDate}: <strong> ₹ {range.price} </strong>
                             </div>
                           ))}
                         </div>
