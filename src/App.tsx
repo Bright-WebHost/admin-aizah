@@ -26,6 +26,10 @@ import Merano from "./pages/UserDetails/Merano";
 import Reva from "./pages/UserDetails/Reva";
 import Majestine from "./pages/UserDetails/Majestine";
 import Merano2 from "./pages/UserDetails/Merano2";
+import NandhiHills from "./pages/UserDetails/NandhiHills";
+import PenthouseParisian from "./pages/UserDetails/PenthouseParisian";
+import FramhouseWithPool from "./pages/UserDetails/FramhouseWithPool";
+import IndianRoomPrice from "./components/form/form-elements/IndianRoomPrice";
 
 export default function App() {
   return (
@@ -40,6 +44,7 @@ export default function App() {
             <Route index path="/submit-data" element={<SubmitData />} />
             <Route index path="/Razorpay" element={<Razorpay />} />
             <Route index path="/Price" element={<Price />} />
+            <Route index path="/IndianPrice" element={<IndianRoomPrice />} />
 
             {/* Others Page */}
             <Route path="/profile" element={<UserProfiles />} />
@@ -48,6 +53,11 @@ export default function App() {
             <Route path="/Reva" element={<Reva />} />
             <Route path="/Majestine" element={<Majestine />} />
             <Route path="/Merano-2906" element={<Merano2 />} />
+
+            {/* india */}
+              <Route path="/NandhiHills" element={<NandhiHills />} />
+                <Route path="/PenthouseParisian" element={<PenthouseParisian />} />
+                  <Route path="/FramhouseWithPool" element={<FramhouseWithPool />} />
             <Route path="/blank" element={<Blank />} />
 
             {/* Forms */}

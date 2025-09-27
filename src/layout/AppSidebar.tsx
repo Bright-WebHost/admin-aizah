@@ -44,7 +44,7 @@ const navItems: NavItem[] = [
     // path: "/user-details",
   },
   {
-    name: "Rooms",
+    name: "Dubai  Properties",
     icon: <CalenderIcon />,
     subItems: [
       // { name: "Chic 1 BHK", path: "/Merano", pro: false },
@@ -58,12 +58,28 @@ const navItems: NavItem[] = [
       // { name: "Chic 1 BHK", path: "/blank", pro: false },
     ],
   },
+  {
+    name: "Indian Properties",
+    icon: <CalenderIcon />,
+    subItems: [
+      // { name: "Chic 1 BHK", path: "/Merano", pro: false },
+      // { name: "Dubai mall", path: "/Merano", pro: false },
+      // { name: "Chic Studio", path: "/Merano", pro: false },
+      { name: "NandhiHills", path: "/NandhiHills", pro: false },
+      { name: "PenthouseParisian", path: "/PenthouseParisian", pro: false },
+      { name: "FramhouseWithPool", path: "/FramhouseWithPool", pro: false },
+    
+      // { name: "Merano 2906", path: "/calendar", pro: false },
+      // { name: "Chic 1 BHK", path: "/blank", pro: false },
+    ],
+  },
     {
     icon: <BoxCubeIcon />,
     name: "Admin Controller",
       subItems: [
         // { name: "razorpay", path: "/Razorpay", pro: false },
-        { name: "Prize", path: "/Price", pro: false },
+        { name: "Dubai Properties", path: "/Price", pro: false },
+        { name: "Indian Properties", path: "/IndianPrice", pro: false },
 
       ],
     // path: "/user-details",
